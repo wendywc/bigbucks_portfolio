@@ -19,16 +19,16 @@ from bigbucks_port.portfolio import *
 ```
 
 ## Functions
-- Get the current portfolio holdings for user. 
-It returns a json list includes the stock symbol, number of shares and price per share (weighted by historical cost)
-Note: If you want to get all the stocks for all the users, set `id=None`. Same for other functions below. 
+### Get the current portfolio holdings for user. 
+- It returns a json list includes the stock symbol, number of shares, historical cost and price per share.
+- If you want to get all the stocks for all the users, set `id=None`. Same for other functions below. 
 
 ```python
-holding = current_holding(objs,6)
+holding = holding_json(objs,6)
 ```
 Example output:
 ```python
-[{"stock_symbol":"AAPL","num_shares":0,"pv":0.0,"price per share":null},{"stock_symbol":"IBM","num_shares":100,"pv":13107.0007324219,"price per share":131.0700073242}]
+{"IBM":{"num_shares":100.0,"historical cost":13107.0007324219,"price per share":131.0700073242}}
 ```
 
 - Calculate the expected return, std and covariance of portfolio

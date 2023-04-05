@@ -34,21 +34,25 @@ def current_holding(objs,id):
         trans = trans_all[trans_all["customer_id"]==id]
     # assign signal for numbers buy+,sell-
     trans["num_shares"]=trans.apply(lambda x: x["num_shares"] if x["condition"] == "buy" else -x["num_shares"],axis=1)
-    trans["pv"] = trans.apply(lambda x: x["num_shares"]*x["stock_price_realtime"],axis=1)
+    trans["historical cost"] = trans.apply(lambda x: x["num_shares"]*x["stock_price_realtime"],axis=1)
     # Group by symbol
-    holding = trans[['stock_symbol','num_shares','pv']].groupby('stock_symbol').sum()
+    holding = trans[['stock_symbol','num_shares','historical cost']].groupby('stock_symbol').sum()
     # Calculate the actual price per share
-    holding['price per share'] = holding['pv']/holding['num_shares']
-    # Convert to json
-    holding.reset_index(inplace=True)
-    holding = holding.to_json(orient='records')
+    holding['price per share'] = holding['historical cost']/holding['num_shares']
+    # drop the record if no share exists
+    holding =holding[holding['num_shares']>0]
+    # return holding.T.to_json()
     return holding
+
+# return current holding json format
+def holding_json(objs,id):
+    return current_holding(objs,id).T.to_json()
 
 # Calculate the daily returns for the stocks in the portfolio
 def cal_returns(objs,id):
     # Get the symbols in the holding
     holdings = current_holding(objs,id)
-    symbols = pd.json_normalize(json.loads(holdings))['stock_symbol'].to_numpy()
+    symbols = holdings.index.to_numpy()
     stockreturns = pd.DataFrame(columns=symbols)
     # Get the daily prices for the given symbol
     for s in symbols:
