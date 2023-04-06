@@ -24,57 +24,64 @@ from bigbucks_port.portfolio import *
 - If you want to get all the stocks for all the users, set `id=None`. Same for other functions below. 
 
 ```python
-holding = holding_json(objs,6)
+id =6
+holding = holding_json(objs,id)
 ```
 Example output:
 ```python
-{"IBM":{"num_shares":100.0,"historical cost":13107.0007324219,"price per share":131.0700073242}}
+{"IBM":{"num_shares":100,"historical_cost":13107.0007324219,"price_per_share":131.0700073242}}
+```
+### Calculate the historical daily return for each stock in the holding 
+```python
+returns = return_json(objs,id)
+```
+Example output:
+```python
+[{"Symbol": "AAPL", "labels": ["2018-04-03", "2018-04-04"], "data": [{"date": "2018-04-03", "return": 0.010206911067964735}, {"date": "2018-04-04", "return": 0.01894174279199366}]}, {"Symbol": "IBM", "labels": ["2018-04-03", "2018-04-04"], "data": [{"date": "2018-04-03", "return": -0.0014670581452283652}, {"date": "2018-04-04", "return": 0.028096725995288337}]}]
+```
+### Calculate the historical daily return for SPY 
+```python
+returns = spy_json(objs)
 ```
 
-- Calculate the expected return, std and covariance of portfolio
-The statistics are calculated based on the historical data. 
-Note: It returns 4 values, the fourth one is the json list with expected return and std for each stock and the rest 3 are used in later functions.
-
+Example output:
 ```python
-er,std,covar,er_std_json = er_covar(objs,6)
-```
-Example output of `er_std_json`
-```python
-{"mean":{"AAPL":0.2318697889,"IBM":-0.0075799068},"std":{"AAPL":0.3361717704,"IBM":0.2759977582}}
+{"Symbol": "SPY", "labels": ["2018-04-10", "2018-04-11"], "data": [{"date": "2018-04-10", "return": 0.016588598996312102}, {"date": "2018-04-11", "return": -0.005540685772461173}]}
 ```
 
-- Get the risk and return for a list of portfolios with randomly generated weights
-
+### Calculate the expected return and std of each stock in the portfolio
+- It returns a a json list of mean and std for each stock
 ```python
-# N: number of portfolios generated
-return_risk = rand_scatter(5,objs,6)
+er_std = er_std_json(obj,id)
+```
+Example output:
+```python
+{"AAPL":{"mean":0.2318697889,"std":0.3361717704},"IBM":{"mean":-0.0075799068,"std":0.2759977582}}
+```
+
+### Get the risk and return for the efficient frontier
+- 
+```python
+# num: number of portfolios on the efficient frontier
+return_risk = frontier_json(objs,id,num)
 ```
 Example output
 ```python
-{"mean": [0.13009300157209497, 0.02497749995225248, 0.16554410436129516, 0.14454572030763208, 0.10086096141188186], "std": [0.06705431545265916, 0.0656856601122741, 0.07160084144613905, 0.0686922284906061, 0.06474888518469718]}
+{"data": [{"std": 0.06906698680510652, "mean": -0.007579906778486523}, {"std": 0.06906698680510652, "mean": -0.007579906778486523}]}
 ```
 
-- Get the risk and return for the efficient frontier
-```python
-return_risk = frontier(objs,6)
-```
-Example output
-```python
-{"mean": [],"std":[]}
-```
-
-- Get the optimal portfolio given a risk free rate
+### Get the optimal portfolio given a risk free rate
 
 ```python
-opt = optimize_port(0.0025,objs,6)
+# rf: risk free rate
+opt = optimize_port(rf,objs,id)
 ```
 Example output
 ```python
 {"opt mean": 0.2318697888966346, "opt std": 0.08412521675427394, "opt sharpe": 2.7265283555418782}
 ```
 
-- Get the risk and return for the current portfolio
-Note: weight is calculated by the current holding
+### Calculate the risk, return and sharpe for the current holding
 
 ```python
 risk_return = cur_risk_return(0.0025,objs,6)
@@ -84,7 +91,7 @@ Example output
 {'mean': -0.007579906778486523, 'std': 0.06906698680510652, 'sharpe': -0.1459439197330273}
 ```
 
-- Calculate the holding period return and balance
+### Calculate the holding period return and cash balance
 ```python
 holding_stat = holding_return(objs,6,objs_realtime)
 ```
@@ -93,8 +100,5 @@ Example output
 ```python
 # PV: the market value of all cash and stocks in the account
 # Cash: cash remained in the account balance
-{'PV': 1000000.0, 'Cash': 986892.9992675781, 'Holding period return': 0.0}
+{'PV': 1000106.999206543, 'Cash': 986892.9992675781, 'Holding_return': 0.00010699920654300143}
 ```
-
-
-# bigbucks_portfolio

@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import json
 
 import sys
 sys.path.append('../src/bigbucks_port')
@@ -15,13 +17,10 @@ corr = [[1,.5,0],
         [0,.5,1]]
 covar = np.diag(sd) @ corr @ np.diag(sd)
 
-# Connect to supabase
-url = "https://lhjpufbcymwhprgzfbwt.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoanB1ZmJjeW13aHByZ3pmYnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk2MDY3MDMsImV4cCI6MTk5NTE4MjcwM30.42A0qtrLYChbrdUzjf1E7TRgHionW5xrZRK-e9wBqPk"
-objs = Table_View(url, key)
-
-# Connect to Alpha Vantage
-STOCK_API_KEYS = "9Q91BWGMOE13WOR3"
-objs_realtime = Buy_And_Sell(STOCK_API_KEYS)
-
-print(portfolio.holding_json(objs,6))
+# means, stds = portfolio.frontier(objs,6,100)
+# plt.scatter(stds, means)
+# plt.show()
+# print(portfolio.frontier_json(objs,None,3))
+# js = portfolio.return_json(objs,6)
+# print(json.loads(js)[0])
+# print(portfolio.spy_json(objs))
