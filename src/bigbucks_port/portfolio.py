@@ -54,10 +54,15 @@ def cal_returns(objs,id):
     # Get the symbols in the holding
     holdings = current_holding(objs,id)
     symbols = holdings.index.to_numpy()
+    if len(symbols) ==0:
+        raise Exception("This user has no holding")
     stockreturns = pd.DataFrame(columns=symbols)
     # Get the daily prices for the given symbol
     for s in symbols:
-        stockprice = pd.json_normalize(objs.view_symbol_price_data(s))
+        data = objs.view_symbol_price_data(s)
+        if len(data) == 0:
+            raise Exception("This symbol has no historical price data")
+        stockprice = pd.json_normalize(data)
         # Sort prices by date
         stockprice.sort_values(by='date',inplace=True)
         # calculate the daily returns
