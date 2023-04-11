@@ -186,11 +186,12 @@ def frontier_json(objs,id,num):
     returns,risk = frontier(objs,id,num)
     # A list of json objects 
     js_list =[]
+    labels_list = []
     for i in range(len(returns)):
         dict_obj = {'std': risk[i], 'mean': returns[i]}
+        labels_list.append(risk[i])
         js_list.append(dict_obj)
-    js_result = {"data":js_list}
-    return json.dumps(js_result)
+    return json.dumps({"data":js_list,"labels":labels_list})
 
 # optimal portfolio with max sharpe
 def optimize_port(rf,objs,id):

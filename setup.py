@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name = 'bigbucks_port',
-    version = '0.0.5',
+    version = '0.1.0',
     author = 'Wenjie Cui',
     description= "A package used for portfolio analysis in Fintech512",
     long_description=long_description,
