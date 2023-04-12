@@ -17,11 +17,11 @@ from bigbucks_db import *
 #         [0,.5,1]]
 # covar = np.diag(sd) @ corr @ np.diag(sd)
 
-url = "https://lhjpufbcymwhprgzfbwt.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoanB1ZmJjeW13aHByZ3pmYnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk2MDY3MDMsImV4cCI6MTk5NTE4MjcwM30.42A0qtrLYChbrdUzjf1E7TRgHionW5xrZRK-e9wBqPk"
-STOCK_API_KEYS = "9Q91BWGMOE13WOR3"
-
 objs_realtime = Buy_And_Sell(STOCK_API_KEYS)
 objs = Table_View(url, key)
 
-print(portfolio.frontier_json(objs,6,5))
+# returns,risk = portfolio.frontier(objs,8,100)
+# plt.scatter(risk,returns)
+# plt.show()
+# print(portfolio.frontier_json(objs,8,100))
+print(portfolio.frontier_json(objs,3,10))

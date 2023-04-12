@@ -56,7 +56,8 @@ def cal_returns(objs,id):
     symbols = holdings.index.to_numpy()
     if len(symbols) ==0:
         raise Exception("This user has no holding")
-    stockreturns = pd.DataFrame(columns=symbols)
+    # stockreturns = pd.DataFrame(columns=symbols)
+    stockreturns = []
     # Get the daily prices for the given symbol
     for s in symbols:
         data = objs.view_symbol_price_data(s)
@@ -66,11 +67,14 @@ def cal_returns(objs,id):
         # Sort prices by date
         stockprice.sort_values(by='date',inplace=True)
         # calculate the daily returns
-        returns = np.log(stockprice['adjusted_close']/stockprice['adjusted_close'].shift(1))
-        stockreturns[s]=returns.to_numpy()
-    stockreturns.index = stockprice['date']
-    stockreturns.dropna(inplace=True)
-    return stockreturns
+        returns = pd.DataFrame(np.log(stockprice['adjusted_close']/stockprice['adjusted_close'].shift(1)))
+        returns.columns = [s]
+        returns.index = stockprice['date']
+        # stockreturns[s]=returns.to_numpy()
+        stockreturns.append(returns)
+    returns = pd.concat(stockreturns,axis=1)
+    returns.dropna(inplace=True)
+    return returns
 
 # Calculate the daily returns for SPY
 def spy_returns(objs):
@@ -188,8 +192,8 @@ def frontier_json(objs,id,num):
     js_list =[]
     labels_list = []
     for i in range(len(returns)):
-        dict_obj = {'std': risk[i], 'mean': returns[i]}
-        labels_list.append(risk[i])
+        dict_obj = {'std': round(risk[i],3), 'mean': round(returns[i],3)}
+        labels_list.append(round(risk[i],3))
         js_list.append(dict_obj)
     return json.dumps({"data":js_list,"labels":labels_list})
 
